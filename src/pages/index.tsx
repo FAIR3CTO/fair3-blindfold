@@ -322,7 +322,7 @@ export default function HomePage() {
           onClick={addGlasses}
           disabled={!imageLoaded || !glassesImageLoaded}
         >
-          {!glassesImageLoaded ? 'Loading...' : 'Add Glasses'}
+          {!glassesImageLoaded ? 'Loading...' : 'ADD BLINDFOLD'}
         </button>
         <button 
           className="btn download-btn" 
