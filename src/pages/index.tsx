@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import './index.less';
+import redGlasses from '../assets/red.png';
 
 interface GlassesProps {
   id: string;
@@ -59,7 +60,7 @@ export default function HomePage() {
       x: 250,
       y: 150,
       rotation: 0,
-      scale: 1,
+      scale: 4,
     };
     setGlasses([...glasses, newGlasses]);
   };
@@ -169,7 +170,7 @@ export default function HomePage() {
   // Rotate glasses
   const rotateGlasses = (index: number, direction: 'left' | 'right') => {
     const newGlasses = [...glasses];
-    const rotationChange = direction === 'left' ? -15 : 15;
+    const rotationChange = direction === 'left' ? -5 : 5;
     newGlasses[index] = {
       ...newGlasses[index],
       rotation: (newGlasses[index].rotation + rotationChange) % 360,
@@ -181,7 +182,7 @@ export default function HomePage() {
   const scaleGlasses = (index: number, direction: 'up' | 'down') => {
     const newGlasses = [...glasses];
     const scaleChange = direction === 'up' ? 0.1 : -0.1;
-    const newScale = Math.max(0.3, Math.min(3, newGlasses[index].scale + scaleChange));
+    const newScale = Math.max(0.3, Math.min(8, newGlasses[index].scale + scaleChange));
     newGlasses[index] = {
       ...newGlasses[index],
       scale: newScale,
@@ -199,90 +200,89 @@ export default function HomePage() {
 
     const img = new Image();
     img.onload = () => {
-      // Create a temporary canvas for composition
-      const tempCanvas = document.createElement('canvas');
-      const tempCtx = tempCanvas.getContext('2d');
-      if (!tempCtx) return;
+      // Load glasses image
+      const glassesImg = new Image();
+      glassesImg.onload = () => {
+        // Create a temporary canvas for composition
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        if (!tempCtx) return;
 
-      tempCanvas.width = canvas.width;
-      tempCanvas.height = canvas.height;
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
 
-      // Clear canvas
-      tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
-      
-      // Draw background image
-      const aspectRatio = img.width / img.height;
-      let drawWidth, drawHeight;
-      
-      if (aspectRatio > tempCanvas.width / tempCanvas.height) {
-        drawWidth = tempCanvas.width;
-        drawHeight = tempCanvas.width / aspectRatio;
-      } else {
-        drawHeight = tempCanvas.height;
-        drawWidth = tempCanvas.height * aspectRatio;
-      }
-      
-      const x = (tempCanvas.width - drawWidth) / 2;
-      const y = (tempCanvas.height - drawHeight) / 2;
-      
-      tempCtx.drawImage(img, x, y, drawWidth, drawHeight);
-      
-      // Draw glasses
-      glasses.forEach((glass) => {
-        tempCtx.save();
-        tempCtx.translate(glass.x, glass.y);
-        tempCtx.rotate((glass.rotation * Math.PI) / 180);
-        tempCtx.scale(glass.scale, glass.scale);
+        // Clear canvas
+        tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
         
-        // Draw glasses frame
-        tempCtx.strokeStyle = '#333';
-        tempCtx.lineWidth = 3;
-        tempCtx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+        // Draw background image
+        const aspectRatio = img.width / img.height;
+        let drawWidth, drawHeight;
         
-        // Left lens
-        tempCtx.beginPath();
-        tempCtx.ellipse(-25, 0, 20, 15, 0, 0, 2 * Math.PI);
-        tempCtx.fill();
-        tempCtx.stroke();
+        if (aspectRatio > tempCanvas.width / tempCanvas.height) {
+          drawWidth = tempCanvas.width;
+          drawHeight = tempCanvas.width / aspectRatio;
+        } else {
+          drawHeight = tempCanvas.height;
+          drawWidth = tempCanvas.height * aspectRatio;
+        }
         
-        // Right lens
-        tempCtx.beginPath();
-        tempCtx.ellipse(25, 0, 20, 15, 0, 0, 2 * Math.PI);
-        tempCtx.fill();
-        tempCtx.stroke();
+        const x = (tempCanvas.width - drawWidth) / 2;
+        const y = (tempCanvas.height - drawHeight) / 2;
         
-        // Nose bridge
-        tempCtx.beginPath();
-        tempCtx.moveTo(-5, -3);
-        tempCtx.lineTo(5, -3);
-        tempCtx.stroke();
+        tempCtx.drawImage(img, x, y, drawWidth, drawHeight);
         
-        // Glasses temples
-        tempCtx.beginPath();
-        tempCtx.moveTo(-45, 0);
-        tempCtx.lineTo(-65, -5);
-        tempCtx.stroke();
+        // Draw glasses
+        glasses.forEach((glass) => {
+          tempCtx.save();
+          tempCtx.translate(glass.x, glass.y);
+          tempCtx.rotate((glass.rotation * Math.PI) / 180);
+          tempCtx.scale(glass.scale, glass.scale);
+          
+          // Draw glasses image with aspect ratio preservation
+          const containerWidth = 100;
+          const containerHeight = 50;
+          const imgAspectRatio = glassesImg.width / glassesImg.height;
+          const containerAspectRatio = containerWidth / containerHeight;
+          
+          let drawWidth, drawHeight;
+          if (imgAspectRatio > containerAspectRatio) {
+            // Image is wider than container
+            drawWidth = containerWidth;
+            drawHeight = containerWidth / imgAspectRatio;
+          } else {
+            // Image is taller than container
+            drawHeight = containerHeight;
+            drawWidth = containerHeight * imgAspectRatio;
+          }
+          
+          tempCtx.drawImage(
+            glassesImg, 
+            -drawWidth / 2, 
+            -drawHeight / 2, 
+            drawWidth, 
+            drawHeight
+          );
+          
+          tempCtx.restore();
+        });
         
-        tempCtx.beginPath();
-        tempCtx.moveTo(45, 0);
-        tempCtx.lineTo(65, -5);
-        tempCtx.stroke();
-        
-        tempCtx.restore();
-      });
-      
-      // Download image
-      try {
-        const link = document.createElement('a');
-        link.download = `swag-avatar-${Date.now()}.png`;
-        link.href = tempCanvas.toDataURL('image/png', 1.0);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (error) {
-        alert('Download failed, please try again!');
-        console.error('Download error:', error);
-      }
+        // Download image
+        try {
+          const link = document.createElement('a');
+          link.download = `swag-avatar-${Date.now()}.png`;
+          link.href = tempCanvas.toDataURL('image/png', 1.0);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } catch (error) {
+          alert('Download failed, please try again!');
+          console.error('Download error:', error);
+        }
+      };
+      glassesImg.onerror = () => {
+        alert('Glasses image loading failed, please try again!');
+      };
+      glassesImg.src = redGlasses;
     };
     img.onerror = () => {
       alert('Image processing failed, please try again!');
@@ -292,7 +292,7 @@ export default function HomePage() {
 
   return (
     <div className="avatar-editor" ref={editorRef}>
-      <h1>PFP MAKER</h1>
+      <h1>Fair🖕Free</h1>
       
       <div className="controls">
         <button 
@@ -323,8 +323,8 @@ export default function HomePage() {
           width={500}
           height={400}
           style={{
-            background: uploadedImage ? `url(${uploadedImage}) center/contain no-repeat #333` : '#333',
-            border: '2px solid #666',
+            background: uploadedImage ? `url(${uploadedImage}) center/contain no-repeat #f0f0f0` : '#f0f0f0',
+            border: '2px solid #ccc',
             borderRadius: '8px',
           }}
           onClick={handleCanvasClick}
@@ -343,7 +343,9 @@ export default function HomePage() {
               }}
               onMouseDown={(e) => handleMouseDown(e, index)}
             >
-              <div className="glasses-frame">👓</div>
+              <div className="glasses-frame">
+                <img src={redGlasses} alt="Red Glasses" />
+              </div>
               {selectedGlassIndex === index && (
                 <div 
                   className="controls-overlay"
