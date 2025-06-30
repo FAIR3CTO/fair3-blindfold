@@ -17,9 +17,29 @@ export default function HomePage() {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [glassesImageLoaded, setGlassesImageLoaded] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const editorRef = useRef<HTMLDivElement>(null);
+  const glassesImageRef = useRef<HTMLImageElement | null>(null);
+
+  // Preload glasses image
+  useEffect(() => {
+    const preloadGlassesImage = () => {
+      const img = new Image();
+      img.onload = () => {
+        glassesImageRef.current = img;
+        setGlassesImageLoaded(true);
+      };
+      img.onerror = () => {
+        console.error('Failed to preload glasses image');
+        setGlassesImageLoaded(false);
+      };
+      img.src = redGlasses;
+    };
+
+    preloadGlassesImage();
+  }, []);
 
   // Handle image upload
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -192,7 +212,7 @@ export default function HomePage() {
 
   // Download image
   const downloadImage = () => {
-    if (!canvasRef.current || !uploadedImage) return;
+    if (!canvasRef.current || !uploadedImage || !glassesImageRef.current) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -200,89 +220,85 @@ export default function HomePage() {
 
     const img = new Image();
     img.onload = () => {
-      // Load glasses image
-      const glassesImg = new Image();
-      glassesImg.onload = () => {
-        // Create a temporary canvas for composition
-        const tempCanvas = document.createElement('canvas');
-        const tempCtx = tempCanvas.getContext('2d');
-        if (!tempCtx) return;
+      // Use preloaded glasses image
+      const glassesImg = glassesImageRef.current;
+      if (!glassesImg) return;
 
-        tempCanvas.width = canvas.width;
-        tempCanvas.height = canvas.height;
+      // Create a temporary canvas for composition
+      const tempCanvas = document.createElement('canvas');
+      const tempCtx = tempCanvas.getContext('2d');
+      if (!tempCtx) return;
 
-        // Clear canvas
-        tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+
+      // Clear canvas
+      tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
+      
+      // Draw background image
+      const aspectRatio = img.width / img.height;
+      let drawWidth, drawHeight;
+      
+      if (aspectRatio > tempCanvas.width / tempCanvas.height) {
+        drawWidth = tempCanvas.width;
+        drawHeight = tempCanvas.width / aspectRatio;
+      } else {
+        drawHeight = tempCanvas.height;
+        drawWidth = tempCanvas.height * aspectRatio;
+      }
+      
+      const x = (tempCanvas.width - drawWidth) / 2;
+      const y = (tempCanvas.height - drawHeight) / 2;
+      
+      tempCtx.drawImage(img, x, y, drawWidth, drawHeight);
+      
+      // Draw glasses
+      glasses.forEach((glass) => {
+        tempCtx.save();
+        tempCtx.translate(glass.x, glass.y);
+        tempCtx.rotate((glass.rotation * Math.PI) / 180);
+        tempCtx.scale(glass.scale, glass.scale);
         
-        // Draw background image
-        const aspectRatio = img.width / img.height;
+        // Draw glasses image with aspect ratio preservation
+        const containerWidth = 100;
+        const containerHeight = 50;
+        const imgAspectRatio = glassesImg.width / glassesImg.height;
+        const containerAspectRatio = containerWidth / containerHeight;
+        
         let drawWidth, drawHeight;
-        
-        if (aspectRatio > tempCanvas.width / tempCanvas.height) {
-          drawWidth = tempCanvas.width;
-          drawHeight = tempCanvas.width / aspectRatio;
+        if (imgAspectRatio > containerAspectRatio) {
+          // Image is wider than container
+          drawWidth = containerWidth;
+          drawHeight = containerWidth / imgAspectRatio;
         } else {
-          drawHeight = tempCanvas.height;
-          drawWidth = tempCanvas.height * aspectRatio;
+          // Image is taller than container
+          drawHeight = containerHeight;
+          drawWidth = containerHeight * imgAspectRatio;
         }
         
-        const x = (tempCanvas.width - drawWidth) / 2;
-        const y = (tempCanvas.height - drawHeight) / 2;
+        tempCtx.drawImage(
+          glassesImg, 
+          -drawWidth / 2, 
+          -drawHeight / 2, 
+          drawWidth, 
+          drawHeight
+        );
         
-        tempCtx.drawImage(img, x, y, drawWidth, drawHeight);
-        
-        // Draw glasses
-        glasses.forEach((glass) => {
-          tempCtx.save();
-          tempCtx.translate(glass.x, glass.y);
-          tempCtx.rotate((glass.rotation * Math.PI) / 180);
-          tempCtx.scale(glass.scale, glass.scale);
-          
-          // Draw glasses image with aspect ratio preservation
-          const containerWidth = 100;
-          const containerHeight = 50;
-          const imgAspectRatio = glassesImg.width / glassesImg.height;
-          const containerAspectRatio = containerWidth / containerHeight;
-          
-          let drawWidth, drawHeight;
-          if (imgAspectRatio > containerAspectRatio) {
-            // Image is wider than container
-            drawWidth = containerWidth;
-            drawHeight = containerWidth / imgAspectRatio;
-          } else {
-            // Image is taller than container
-            drawHeight = containerHeight;
-            drawWidth = containerHeight * imgAspectRatio;
-          }
-          
-          tempCtx.drawImage(
-            glassesImg, 
-            -drawWidth / 2, 
-            -drawHeight / 2, 
-            drawWidth, 
-            drawHeight
-          );
-          
-          tempCtx.restore();
-        });
-        
-        // Download image
-        try {
-          const link = document.createElement('a');
-          link.download = `swag-avatar-${Date.now()}.png`;
-          link.href = tempCanvas.toDataURL('image/png', 1.0);
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        } catch (error) {
-          alert('Download failed, please try again!');
-          console.error('Download error:', error);
-        }
-      };
-      glassesImg.onerror = () => {
-        alert('Glasses image loading failed, please try again!');
-      };
-      glassesImg.src = redGlasses;
+        tempCtx.restore();
+      });
+      
+      // Download image
+      try {
+        const link = document.createElement('a');
+        link.download = `swag-avatar-${Date.now()}.png`;
+        link.href = tempCanvas.toDataURL('image/png', 1.0);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (error) {
+        alert('Download failed, please try again!');
+        console.error('Download error:', error);
+      }
     };
     img.onerror = () => {
       alert('Image processing failed, please try again!');
@@ -304,14 +320,14 @@ export default function HomePage() {
         <button 
           className="btn" 
           onClick={addGlasses}
-          disabled={!imageLoaded}
+          disabled={!imageLoaded || !glassesImageLoaded}
         >
-          Add Glasses
+          {!glassesImageLoaded ? 'Loading...' : 'Add Glasses'}
         </button>
         <button 
           className="btn download-btn" 
           onClick={downloadImage}
-          disabled={!imageLoaded || glasses.length === 0}
+          disabled={!imageLoaded || glasses.length === 0 || !glassesImageLoaded}
         >
           Download Image
         </button>
@@ -394,6 +410,7 @@ export default function HomePage() {
       {!imageLoaded && (
         <div className="welcome-message">
           <p>👆 Click "Upload Image" to start creating your awesome avatar</p>
+          {!glassesImageLoaded && <p>⏳ Loading glasses assets...</p>}
         </div>
       )}
 

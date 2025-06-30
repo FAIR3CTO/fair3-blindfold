@@ -145,6 +145,14 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -224,7 +232,15 @@
             11,
             10,
             7,
-            27
+            27,
+            10,
+            10,
+            11,
+            5,
+            9,
+            8,
+            9,
+            9
           ]
         },
         "register": 13
@@ -241,6 +257,14 @@
       "time": {
         "hooks": {
           "addEntryCode": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -338,9 +362,28 @@
             0,
             0,
             0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "onCheckCode": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1468,9 +1511,25 @@
             0,
             0,
             1,
-            4
+            4,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0
           ],
           "addRuntimePlugin": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1663,9 +1722,33 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "addEntryImports": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1877,9 +1960,33 @@
             19,
             28,
             19,
-            31
+            31,
+            16,
+            27,
+            18,
+            16,
+            21,
+            15,
+            16,
+            15
           ],
           "addPolyfillImports": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -2134,6 +2241,22 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -2152,6 +2275,14 @@
         "hooks": {
           "onGenerateFiles": [
             177,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -2299,6 +2430,14 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "addBeforeMiddlewares": [
@@ -2438,7 +2577,23 @@
             3,
             1,
             5,
-            2
+            2,
+            4,
+            2,
+            5,
+            2,
+            4,
+            1,
+            4,
+            1,
+            3,
+            1,
+            5,
+            2,
+            4,
+            1,
+            3,
+            1
           ]
         },
         "register": 2
@@ -2552,7 +2707,15 @@
             5,
             5,
             5,
-            7
+            7,
+            6,
+            7,
+            8,
+            6,
+            6,
+            6,
+            8,
+            6
           ]
         },
         "register": 1
@@ -2696,6 +2859,14 @@
             0,
             1,
             1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            0,
             0
           ]
         },
@@ -3254,7 +3425,7 @@
       "parentId": "@@/global-layout",
       "id": "1",
       "absPath": "/",
-      "__content": "import React, { useState, useRef, useCallback, useEffect } from 'react';\nimport './index.less';\nimport redGlasses from '../assets/red.png';\n\ninterface GlassesProps {\n  id: string;\n  x: number;\n  y: number;\n  rotation: number;\n  scale: number;\n}\n\nexport default function HomePage() {\n  const [uploadedImage, setUploadedImage] = useState<string | null>(null);\n  const [glasses, setGlasses] = useState<GlassesProps[]>([]);\n  const [selectedGlassIndex, setSelectedGlassIndex] = useState<number>(-1);\n  const [isDragging, setIsDragging] = useState(false);\n  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });\n  const [imageLoaded, setImageLoaded] = useState(false);\n  const canvasRef = useRef<HTMLCanvasElement>(null);\n  const fileInputRef = useRef<HTMLInputElement>(null);\n  const editorRef = useRef<HTMLDivElement>(null);\n\n  // Handle image upload\n  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {\n    const file = event.target.files?.[0];\n    if (file) {\n      // Check file size (limit to 10MB)\n      if (file.size > 10 * 1024 * 1024) {\n        alert('Image file is too large, please select an image smaller than 10MB!');\n        return;\n      }\n      \n      // Check file type\n      if (!file.type.startsWith('image/')) {\n        alert('Please select a valid image file!');\n        return;\n      }\n\n      const reader = new FileReader();\n      reader.onload = (e) => {\n        setUploadedImage(e.target?.result as string);\n        setImageLoaded(true);\n        // Clear existing glasses\n        setGlasses([]);\n        setSelectedGlassIndex(-1);\n      };\n              reader.onerror = () => {\n          alert('Image loading failed, please try again!');\n        };\n      reader.readAsDataURL(file);\n    }\n  };\n\n  // Add glasses\n  const addGlasses = () => {\n    const id = Date.now().toString() + Math.random().toString(36).substr(2, 9);\n    const newGlasses: GlassesProps = {\n      id,\n      x: 225,\n      y: 175,\n      rotation: 0,\n      scale: 4,\n    };\n    setGlasses([...glasses, newGlasses]);\n  };\n\n  // Delete selected glasses\n  const deleteSelectedGlasses = () => {\n    if (selectedGlassIndex >= 0) {\n      const newGlasses = glasses.filter((_, index) => index !== selectedGlassIndex);\n      setGlasses(newGlasses);\n      setSelectedGlassIndex(-1);\n    }\n  };\n\n  // Handle mouse down\n  const handleMouseDown = (e: React.MouseEvent, index: number) => {\n    e.preventDefault();\n    e.stopPropagation();\n    setSelectedGlassIndex(index);\n    setIsDragging(true);\n    const rect = canvasRef.current?.getBoundingClientRect();\n    if (rect) {\n      setDragStart({\n        x: e.clientX - rect.left - glasses[index].x,\n        y: e.clientY - rect.top - glasses[index].y,\n      });\n    }\n  };\n\n  // Handle mouse move\n  const handleMouseMove = useCallback((e: MouseEvent) => {\n    if (isDragging && selectedGlassIndex >= 0 && canvasRef.current) {\n      const rect = canvasRef.current.getBoundingClientRect();\n      const newX = e.clientX - rect.left - dragStart.x;\n      const newY = e.clientY - rect.top - dragStart.y;\n      \n      // Limit glasses within canvas bounds\n      const clampedX = Math.max(50, Math.min(400, newX));\n      const clampedY = Math.max(25, Math.min(325, newY));\n      \n      const newGlasses = [...glasses];\n      newGlasses[selectedGlassIndex] = {\n        ...newGlasses[selectedGlassIndex],\n        x: clampedX,\n        y: clampedY,\n      };\n      setGlasses(newGlasses);\n    }\n  }, [isDragging, selectedGlassIndex, glasses, dragStart]);\n\n  // Handle mouse up\n  const handleMouseUp = useCallback(() => {\n    setIsDragging(false);\n  }, []);\n\n  // Click empty area to deselect\n  const handleCanvasClick = (e: React.MouseEvent) => {\n    if (e.target === canvasRef.current) {\n      setSelectedGlassIndex(-1);\n    }\n  };\n\n  // Handle keyboard events\n  const handleKeyDown = useCallback((e: KeyboardEvent) => {\n    if (selectedGlassIndex >= 0) {\n      switch (e.key) {\n        case 'Delete':\n        case 'Backspace':\n          deleteSelectedGlasses();\n          break;\n        case 'ArrowLeft':\n          rotateGlasses(selectedGlassIndex, 'left');\n          break;\n        case 'ArrowRight':\n          rotateGlasses(selectedGlassIndex, 'right');\n          break;\n        case '+':\n        case '=':\n          scaleGlasses(selectedGlassIndex, 'up');\n          break;\n        case '-':\n          scaleGlasses(selectedGlassIndex, 'down');\n          break;\n        case 'Escape':\n          setSelectedGlassIndex(-1);\n          break;\n      }\n    }\n  }, [selectedGlassIndex, glasses]);\n\n  // Add event listeners\n  useEffect(() => {\n    if (isDragging) {\n      document.addEventListener('mousemove', handleMouseMove);\n      document.addEventListener('mouseup', handleMouseUp);\n    }\n    \n    // Add keyboard event listeners\n    document.addEventListener('keydown', handleKeyDown);\n    \n    return () => {\n      document.removeEventListener('mousemove', handleMouseMove);\n      document.removeEventListener('mouseup', handleMouseUp);\n      document.removeEventListener('keydown', handleKeyDown);\n    };\n  }, [isDragging, handleMouseMove, handleMouseUp, handleKeyDown]);\n\n  // Rotate glasses\n  const rotateGlasses = (index: number, direction: 'left' | 'right') => {\n    const newGlasses = [...glasses];\n    const rotationChange = direction === 'left' ? -5 : 5;\n    newGlasses[index] = {\n      ...newGlasses[index],\n      rotation: (newGlasses[index].rotation + rotationChange) % 360,\n    };\n    setGlasses(newGlasses);\n  };\n\n  // Scale glasses\n  const scaleGlasses = (index: number, direction: 'up' | 'down') => {\n    const newGlasses = [...glasses];\n    const scaleChange = direction === 'up' ? 0.1 : -0.1;\n    const newScale = Math.max(0.3, Math.min(8, newGlasses[index].scale + scaleChange));\n    newGlasses[index] = {\n      ...newGlasses[index],\n      scale: newScale,\n    };\n    setGlasses(newGlasses);\n  };\n\n  // Download image\n  const downloadImage = () => {\n    if (!canvasRef.current || !uploadedImage) return;\n\n    const canvas = canvasRef.current;\n    const ctx = canvas.getContext('2d');\n    if (!ctx) return;\n\n    const img = new Image();\n    img.onload = () => {\n      // Load glasses image\n      const glassesImg = new Image();\n      glassesImg.onload = () => {\n        // Create a temporary canvas for composition\n        const tempCanvas = document.createElement('canvas');\n        const tempCtx = tempCanvas.getContext('2d');\n        if (!tempCtx) return;\n\n        tempCanvas.width = 450;\n        tempCanvas.height = 350;\n\n        // Clear canvas\n        tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);\n        \n        // Draw background image\n        const aspectRatio = img.width / img.height;\n        let drawWidth, drawHeight;\n        \n        if (aspectRatio > tempCanvas.width / tempCanvas.height) {\n          drawWidth = tempCanvas.width;\n          drawHeight = tempCanvas.width / aspectRatio;\n        } else {\n          drawHeight = tempCanvas.height;\n          drawWidth = tempCanvas.height * aspectRatio;\n        }\n        \n        const x = (tempCanvas.width - drawWidth) / 2;\n        const y = (tempCanvas.height - drawHeight) / 2;\n        \n        tempCtx.drawImage(img, x, y, drawWidth, drawHeight);\n        \n        // Draw glasses\n        glasses.forEach((glass) => {\n          tempCtx.save();\n          tempCtx.translate(glass.x, glass.y);\n          tempCtx.rotate((glass.rotation * Math.PI) / 180);\n          tempCtx.scale(glass.scale, glass.scale);\n          \n          // Draw glasses image with aspect ratio preservation\n          const containerWidth = 100;\n          const containerHeight = 50;\n          const imgAspectRatio = glassesImg.width / glassesImg.height;\n          const containerAspectRatio = containerWidth / containerHeight;\n          \n          let drawWidth, drawHeight;\n          if (imgAspectRatio > containerAspectRatio) {\n            // Image is wider than container\n            drawWidth = containerWidth;\n            drawHeight = containerWidth / imgAspectRatio;\n          } else {\n            // Image is taller than container\n            drawHeight = containerHeight;\n            drawWidth = containerHeight * imgAspectRatio;\n          }\n          \n          tempCtx.drawImage(\n            glassesImg, \n            -drawWidth / 2, \n            -drawHeight / 2, \n            drawWidth, \n            drawHeight\n          );\n          \n          tempCtx.restore();\n        });\n        \n        // Download image\n        try {\n          const link = document.createElement('a');\n          link.download = `swag-avatar-${Date.now()}.png`;\n          link.href = tempCanvas.toDataURL('image/png', 1.0);\n          document.body.appendChild(link);\n          link.click();\n          document.body.removeChild(link);\n        } catch (error) {\n          alert('Download failed, please try again!');\n          console.error('Download error:', error);\n        }\n      };\n      glassesImg.onerror = () => {\n        alert('Glasses image loading failed, please try again!');\n      };\n      glassesImg.src = redGlasses;\n    };\n    img.onerror = () => {\n      alert('Image processing failed, please try again!');\n    };\n    img.src = uploadedImage;\n  };\n\n  return (\n    <div className=\"avatar-editor\" ref={editorRef}>\n      <h1>Fair🖕Free</h1>\n      \n      <div className=\"controls\">\n        <button \n          className=\"btn\" \n          onClick={() => fileInputRef.current?.click()}\n        >\n          Upload Image\n        </button>\n        <button \n          className=\"btn\" \n          onClick={addGlasses}\n          disabled={!imageLoaded}\n        >\n          Add Glasses\n        </button>\n        <button \n          className=\"btn download-btn\" \n          onClick={downloadImage}\n          disabled={!imageLoaded || glasses.length === 0}\n        >\n          Download Image\n        </button>\n      </div>\n\n      <div className=\"canvas-container\">\n        <canvas\n          ref={canvasRef}\n          width={450}\n          height={350}\n          style={{\n            background: uploadedImage ? `url(${uploadedImage}) center/contain no-repeat #f0f0f0` : '#f0f0f0',\n            border: '2px solid #ccc',\n            borderRadius: '8px',\n          }}\n          onClick={handleCanvasClick}\n        />\n        \n        {/* Glasses overlay */}\n        <div className=\"glasses-overlay\">\n          {glasses.map((glass, index) => (\n            <div\n              key={glass.id}\n              className={`glasses ${selectedGlassIndex === index ? 'selected' : ''} ${isDragging && selectedGlassIndex === index ? 'dragging' : ''}`}\n              style={{\n                left: glass.x - 50,\n                top: glass.y - 25,\n                transform: `rotate(${glass.rotation}deg) scale(${glass.scale})`,\n              }}\n              onMouseDown={(e) => handleMouseDown(e, index)}\n            >\n              <div className=\"glasses-frame\">\n                <img src={redGlasses} alt=\"Red Glasses\" />\n              </div>\n              {selectedGlassIndex === index && (\n                <div \n                  className=\"controls-overlay\"\n                  style={{\n                    transform: `translateX(-50%) scale(${1 / glass.scale})`,\n                  }}\n                >\n                  <button \n                    onClick={(e) => {e.stopPropagation(); rotateGlasses(index, 'left');}}\n                    title=\"Rotate Counterclockwise\"\n                  >\n                    ↺\n                  </button>\n                  <button \n                    onClick={(e) => {e.stopPropagation(); rotateGlasses(index, 'right');}}\n                    title=\"Rotate Clockwise\"\n                  >\n                    ↻\n                  </button>\n                  <button \n                    onClick={(e) => {e.stopPropagation(); scaleGlasses(index, 'up');}}\n                    title=\"Scale Up\"\n                  >\n                    +\n                  </button>\n                  <button \n                    onClick={(e) => {e.stopPropagation(); scaleGlasses(index, 'down');}}\n                    title=\"Scale Down\"\n                  >\n                    -\n                  </button>\n                  <button \n                    onClick={(e) => {e.stopPropagation(); deleteSelectedGlasses();}}\n                    title=\"Delete\"\n                    className=\"delete-btn\"\n                  >\n                    ×\n                  </button>\n                </div>\n              )}\n            </div>\n          ))}\n        </div>\n      </div>\n\n      {!imageLoaded && (\n        <div className=\"welcome-message\">\n          <p>👆 Click \"Upload Image\" to start creating your awesome avatar</p>\n        </div>\n      )}\n\n      <input\n        ref={fileInputRef}\n        type=\"file\"\n        accept=\"image/*\"\n        onChange={handleImageUpload}\n        style={{ display: 'none' }}\n      />\n    </div>\n  );\n}\n",
+      "__content": "import React, { useState, useRef, useCallback, useEffect } from 'react';\nimport './index.less';\nimport redGlasses from '../assets/red.png';\n\ninterface GlassesProps {\n  id: string;\n  x: number;\n  y: number;\n  rotation: number;\n  scale: number;\n}\n\nexport default function HomePage() {\n  const [uploadedImage, setUploadedImage] = useState<string | null>(null);\n  const [glasses, setGlasses] = useState<GlassesProps[]>([]);\n  const [selectedGlassIndex, setSelectedGlassIndex] = useState<number>(-1);\n  const [isDragging, setIsDragging] = useState(false);\n  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });\n  const [imageLoaded, setImageLoaded] = useState(false);\n  const [glassesImageLoaded, setGlassesImageLoaded] = useState(false);\n  const canvasRef = useRef<HTMLCanvasElement>(null);\n  const fileInputRef = useRef<HTMLInputElement>(null);\n  const editorRef = useRef<HTMLDivElement>(null);\n  const glassesImageRef = useRef<HTMLImageElement | null>(null);\n\n  // Preload glasses image\n  useEffect(() => {\n    const preloadGlassesImage = () => {\n      const img = new Image();\n      img.onload = () => {\n        glassesImageRef.current = img;\n        setGlassesImageLoaded(true);\n      };\n      img.onerror = () => {\n        console.error('Failed to preload glasses image');\n        setGlassesImageLoaded(false);\n      };\n      img.src = redGlasses;\n    };\n\n    preloadGlassesImage();\n  }, []);\n\n  // Handle image upload\n  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {\n    const file = event.target.files?.[0];\n    if (file) {\n      // Check file size (limit to 10MB)\n      if (file.size > 10 * 1024 * 1024) {\n        alert('Image file is too large, please select an image smaller than 10MB!');\n        return;\n      }\n      \n      // Check file type\n      if (!file.type.startsWith('image/')) {\n        alert('Please select a valid image file!');\n        return;\n      }\n\n      const reader = new FileReader();\n      reader.onload = (e) => {\n        setUploadedImage(e.target?.result as string);\n        setImageLoaded(true);\n        // Clear existing glasses\n        setGlasses([]);\n        setSelectedGlassIndex(-1);\n      };\n              reader.onerror = () => {\n          alert('Image loading failed, please try again!');\n        };\n      reader.readAsDataURL(file);\n    }\n  };\n\n  // Add glasses\n  const addGlasses = () => {\n    const id = Date.now().toString() + Math.random().toString(36).substr(2, 9);\n    const newGlasses: GlassesProps = {\n      id,\n      x: 250,\n      y: 150,\n      rotation: 0,\n      scale: 4,\n    };\n    setGlasses([...glasses, newGlasses]);\n  };\n\n  // Delete selected glasses\n  const deleteSelectedGlasses = () => {\n    if (selectedGlassIndex >= 0) {\n      const newGlasses = glasses.filter((_, index) => index !== selectedGlassIndex);\n      setGlasses(newGlasses);\n      setSelectedGlassIndex(-1);\n    }\n  };\n\n  // Handle mouse down\n  const handleMouseDown = (e: React.MouseEvent, index: number) => {\n    e.preventDefault();\n    e.stopPropagation();\n    setSelectedGlassIndex(index);\n    setIsDragging(true);\n    const rect = canvasRef.current?.getBoundingClientRect();\n    if (rect) {\n      setDragStart({\n        x: e.clientX - rect.left - glasses[index].x,\n        y: e.clientY - rect.top - glasses[index].y,\n      });\n    }\n  };\n\n  // Handle mouse move\n  const handleMouseMove = useCallback((e: MouseEvent) => {\n    if (isDragging && selectedGlassIndex >= 0 && canvasRef.current) {\n      const rect = canvasRef.current.getBoundingClientRect();\n      const newX = e.clientX - rect.left - dragStart.x;\n      const newY = e.clientY - rect.top - dragStart.y;\n      \n      // Limit glasses within canvas bounds\n      const clampedX = Math.max(50, Math.min(450, newX));\n      const clampedY = Math.max(25, Math.min(375, newY));\n      \n      const newGlasses = [...glasses];\n      newGlasses[selectedGlassIndex] = {\n        ...newGlasses[selectedGlassIndex],\n        x: clampedX,\n        y: clampedY,\n      };\n      setGlasses(newGlasses);\n    }\n  }, [isDragging, selectedGlassIndex, glasses, dragStart]);\n\n  // Handle mouse up\n  const handleMouseUp = useCallback(() => {\n    setIsDragging(false);\n  }, []);\n\n  // Click empty area to deselect\n  const handleCanvasClick = (e: React.MouseEvent) => {\n    if (e.target === canvasRef.current) {\n      setSelectedGlassIndex(-1);\n    }\n  };\n\n  // Handle keyboard events\n  const handleKeyDown = useCallback((e: KeyboardEvent) => {\n    if (selectedGlassIndex >= 0) {\n      switch (e.key) {\n        case 'Delete':\n        case 'Backspace':\n          deleteSelectedGlasses();\n          break;\n        case 'ArrowLeft':\n          rotateGlasses(selectedGlassIndex, 'left');\n          break;\n        case 'ArrowRight':\n          rotateGlasses(selectedGlassIndex, 'right');\n          break;\n        case '+':\n        case '=':\n          scaleGlasses(selectedGlassIndex, 'up');\n          break;\n        case '-':\n          scaleGlasses(selectedGlassIndex, 'down');\n          break;\n        case 'Escape':\n          setSelectedGlassIndex(-1);\n          break;\n      }\n    }\n  }, [selectedGlassIndex, glasses]);\n\n  // Add event listeners\n  useEffect(() => {\n    if (isDragging) {\n      document.addEventListener('mousemove', handleMouseMove);\n      document.addEventListener('mouseup', handleMouseUp);\n    }\n    \n    // Add keyboard event listeners\n    document.addEventListener('keydown', handleKeyDown);\n    \n    return () => {\n      document.removeEventListener('mousemove', handleMouseMove);\n      document.removeEventListener('mouseup', handleMouseUp);\n      document.removeEventListener('keydown', handleKeyDown);\n    };\n  }, [isDragging, handleMouseMove, handleMouseUp, handleKeyDown]);\n\n  // Rotate glasses\n  const rotateGlasses = (index: number, direction: 'left' | 'right') => {\n    const newGlasses = [...glasses];\n    const rotationChange = direction === 'left' ? -5 : 5;\n    newGlasses[index] = {\n      ...newGlasses[index],\n      rotation: (newGlasses[index].rotation + rotationChange) % 360,\n    };\n    setGlasses(newGlasses);\n  };\n\n  // Scale glasses\n  const scaleGlasses = (index: number, direction: 'up' | 'down') => {\n    const newGlasses = [...glasses];\n    const scaleChange = direction === 'up' ? 0.1 : -0.1;\n    const newScale = Math.max(0.3, Math.min(8, newGlasses[index].scale + scaleChange));\n    newGlasses[index] = {\n      ...newGlasses[index],\n      scale: newScale,\n    };\n    setGlasses(newGlasses);\n  };\n\n  // Download image\n  const downloadImage = () => {\n    if (!canvasRef.current || !uploadedImage || !glassesImageRef.current) return;\n\n    const canvas = canvasRef.current;\n    const ctx = canvas.getContext('2d');\n    if (!ctx) return;\n\n    const img = new Image();\n    img.onload = () => {\n      // Use preloaded glasses image\n      const glassesImg = glassesImageRef.current;\n      if (!glassesImg) return;\n\n      // Create a temporary canvas for composition\n      const tempCanvas = document.createElement('canvas');\n      const tempCtx = tempCanvas.getContext('2d');\n      if (!tempCtx) return;\n\n      tempCanvas.width = canvas.width;\n      tempCanvas.height = canvas.height;\n\n      // Clear canvas\n      tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);\n      \n      // Draw background image\n      const aspectRatio = img.width / img.height;\n      let drawWidth, drawHeight;\n      \n      if (aspectRatio > tempCanvas.width / tempCanvas.height) {\n        drawWidth = tempCanvas.width;\n        drawHeight = tempCanvas.width / aspectRatio;\n      } else {\n        drawHeight = tempCanvas.height;\n        drawWidth = tempCanvas.height * aspectRatio;\n      }\n      \n      const x = (tempCanvas.width - drawWidth) / 2;\n      const y = (tempCanvas.height - drawHeight) / 2;\n      \n      tempCtx.drawImage(img, x, y, drawWidth, drawHeight);\n      \n      // Draw glasses\n      glasses.forEach((glass) => {\n        tempCtx.save();\n        tempCtx.translate(glass.x, glass.y);\n        tempCtx.rotate((glass.rotation * Math.PI) / 180);\n        tempCtx.scale(glass.scale, glass.scale);\n        \n        // Draw glasses image with aspect ratio preservation\n        const containerWidth = 100;\n        const containerHeight = 50;\n        const imgAspectRatio = glassesImg.width / glassesImg.height;\n        const containerAspectRatio = containerWidth / containerHeight;\n        \n        let drawWidth, drawHeight;\n        if (imgAspectRatio > containerAspectRatio) {\n          // Image is wider than container\n          drawWidth = containerWidth;\n          drawHeight = containerWidth / imgAspectRatio;\n        } else {\n          // Image is taller than container\n          drawHeight = containerHeight;\n          drawWidth = containerHeight * imgAspectRatio;\n        }\n        \n        tempCtx.drawImage(\n          glassesImg, \n          -drawWidth / 2, \n          -drawHeight / 2, \n          drawWidth, \n          drawHeight\n        );\n        \n        tempCtx.restore();\n      });\n      \n      // Download image\n      try {\n        const link = document.createElement('a');\n        link.download = `swag-avatar-${Date.now()}.png`;\n        link.href = tempCanvas.toDataURL('image/png', 1.0);\n        document.body.appendChild(link);\n        link.click();\n        document.body.removeChild(link);\n      } catch (error) {\n        alert('Download failed, please try again!');\n        console.error('Download error:', error);\n      }\n    };\n    img.onerror = () => {\n      alert('Image processing failed, please try again!');\n    };\n    img.src = uploadedImage;\n  };\n\n  return (\n    <div className=\"avatar-editor\" ref={editorRef}>\n      <h1>Fair🖕Free</h1>\n      \n      <div className=\"controls\">\n        <button \n          className=\"btn\" \n          onClick={() => fileInputRef.current?.click()}\n        >\n          Upload Image\n        </button>\n        <button \n          className=\"btn\" \n          onClick={addGlasses}\n          disabled={!imageLoaded || !glassesImageLoaded}\n        >\n          {!glassesImageLoaded ? 'Loading...' : 'Add Glasses'}\n        </button>\n        <button \n          className=\"btn download-btn\" \n          onClick={downloadImage}\n          disabled={!imageLoaded || glasses.length === 0 || !glassesImageLoaded}\n        >\n          Download Image\n        </button>\n      </div>\n\n      <div className=\"canvas-container\">\n        <canvas\n          ref={canvasRef}\n          width={500}\n          height={400}\n          style={{\n            background: uploadedImage ? `url(${uploadedImage}) center/contain no-repeat #f0f0f0` : '#f0f0f0',\n            border: '2px solid #ccc',\n            borderRadius: '8px',\n          }}\n          onClick={handleCanvasClick}\n        />\n        \n        {/* Glasses overlay */}\n        <div className=\"glasses-overlay\">\n          {glasses.map((glass, index) => (\n            <div\n              key={glass.id}\n              className={`glasses ${selectedGlassIndex === index ? 'selected' : ''} ${isDragging && selectedGlassIndex === index ? 'dragging' : ''}`}\n              style={{\n                left: glass.x - 50,\n                top: glass.y - 25,\n                transform: `rotate(${glass.rotation}deg) scale(${glass.scale})`,\n              }}\n              onMouseDown={(e) => handleMouseDown(e, index)}\n            >\n              <div className=\"glasses-frame\">\n                <img src={redGlasses} alt=\"Red Glasses\" />\n              </div>\n              {selectedGlassIndex === index && (\n                <div \n                  className=\"controls-overlay\"\n                  style={{\n                    transform: `translateX(-50%) scale(${1 / glass.scale})`,\n                  }}\n                >\n                  <button \n                    onClick={(e) => {e.stopPropagation(); rotateGlasses(index, 'left');}}\n                    title=\"Rotate Counterclockwise\"\n                  >\n                    ↺\n                  </button>\n                  <button \n                    onClick={(e) => {e.stopPropagation(); rotateGlasses(index, 'right');}}\n                    title=\"Rotate Clockwise\"\n                  >\n                    ↻\n                  </button>\n                  <button \n                    onClick={(e) => {e.stopPropagation(); scaleGlasses(index, 'up');}}\n                    title=\"Scale Up\"\n                  >\n                    +\n                  </button>\n                  <button \n                    onClick={(e) => {e.stopPropagation(); scaleGlasses(index, 'down');}}\n                    title=\"Scale Down\"\n                  >\n                    -\n                  </button>\n                  <button \n                    onClick={(e) => {e.stopPropagation(); deleteSelectedGlasses();}}\n                    title=\"Delete\"\n                    className=\"delete-btn\"\n                  >\n                    ×\n                  </button>\n                </div>\n              )}\n            </div>\n          ))}\n        </div>\n      </div>\n\n      {!imageLoaded && (\n        <div className=\"welcome-message\">\n          <p>👆 Click \"Upload Image\" to start creating your awesome avatar</p>\n          {!glassesImageLoaded && <p>⏳ Loading glasses assets...</p>}\n        </div>\n      )}\n\n      <input\n        ref={fileInputRef}\n        type=\"file\"\n        accept=\"image/*\"\n        onChange={handleImageUpload}\n        style={{ display: 'none' }}\n      />\n    </div>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/yuanhao/Desktop/change_avatar/my-app/src/pages/index.tsx"
     },
@@ -4417,7 +4588,7 @@
             "format": "esm"
           },
           "src/pages/index.tsx": {
-            "bytes": 12848,
+            "bytes": 13327,
             "imports": [
               {
                 "path": "react",
@@ -5850,7 +6021,7 @@
             "entryPoint": "src/.umi/umi.ts",
             "inputs": {
               "src/pages/index.tsx": {
-                "bytesInOutput": 12845
+                "bytesInOutput": 13340
               },
               "src/pages/docs.tsx": {
                 "bytesInOutput": 413
@@ -5892,7 +6063,7 @@
                 "bytesInOutput": 1949
               }
             },
-            "bytes": 52735
+            "bytes": 53230
           }
         }
       }
