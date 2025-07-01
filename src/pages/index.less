@@ -323,6 +323,7 @@
 .btn:active {
   transform: translateY(1px) !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+  animation: glassesAppear 0.3s ease-out;
 }
 
 // Glasses addition animation
@@ -339,4 +340,36 @@
 
 .glasses:last-child {
   animation: glassesAppear 0.3s ease-out;
+}
+
+.social-links {
+  margin-top: 40px;
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  align-items: center;
+
+  a {
+    display: inline-block;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    img {
+      width: 32px;
+      height: 32px;
+    }
+
+    .dex-icon {
+      border-radius: 99px;
+    }
+
+    .x-icon {
+      width: 28px;
+      height: 28px;
+    }
+  }
 } 

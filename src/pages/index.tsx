@@ -1,6 +1,9 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import './index.less';
 import redGlasses from '../assets/red.png';
+import dexIcon from '../assets/dex.png';
+import tgIcon from '../assets/tg.svg';
+import xIcon from '../assets/x.svg';
 
 interface GlassesProps {
   id: string;
@@ -407,12 +410,17 @@ export default function HomePage() {
         </div>
       </div>
 
-      {!imageLoaded && (
-        <div className="welcome-message">
-          <p>👆 Click "Upload Image" to start creating your awesome avatar</p>
-          {!glassesImageLoaded && <p>⏳ Loading glasses assets...</p>}
-        </div>
-      )}
+      <div className="social-links">
+        <a href="https://t.me/FAIR3_Community" target="_blank" rel="noopener noreferrer">
+          <img src={tgIcon} alt="Telegram" />
+        </a>
+        <a href="https://x.com/Fair3_community" target="_blank" rel="noopener noreferrer">
+          <img src={xIcon} alt="X" className="x-icon" />
+        </a>
+        <a href="https://dexscreener.com/bsc/0x6952c5408b9822295ba4a7e694d0c5ffdb8fe320" target="_blank" rel="noopener noreferrer">
+          <img src={dexIcon} alt="DexScreener" className="dex-icon" />
+        </a>
+      </div>
 
       <input
         ref={fileInputRef}
